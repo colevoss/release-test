@@ -1,9 +1,9 @@
-name: "Pull Request"
+name: Release Kotlin
 
 on:
   push:
     tags:
-      - ts-v*
+      - kt-v*
 
 permissions:
   contents: write
@@ -20,9 +20,7 @@ jobs:
       - name: Get last tag
         id: get-prev-tag
         run: |
-          git tag --sort=-creatordate -l 'ts-v*'
-          echo "PREV_TAG=$(git tag --sort=-creatordate -l 'ts-v*' | head -n 2 | tail -n -1)" >> "$GITHUB_OUTPUT"
-
+          echo "PREV_TAG=$(git tag --sort=-creatordate -l 'kt-v*' | head -n 2 | tail -n -1)" >> "$GITHUB_OUTPUT"
 
       - # Testing Generating Release Notes
         name: Create Release

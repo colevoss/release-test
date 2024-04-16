@@ -1,0 +1,65 @@
+name: TS Release  
+
+on:
+  push:
+    tags:
+      - ts-v*
+
+permissions:
+  contents: write
+
+jobs:
+  do-thing:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get last tag
+        id: get-prev-tag
+        run: |
+          git tag --sort=-creatordate -l 'ts-v*'
+          echo "PREV_TAG=$(git tag --sort=-creatordate -l 'ts-v*' | head -n 2 | tail -n -1)" >> "$GITHUB_OUTPUT"
+
+      - # Testing Generating Release Notes
+        name: Create Release
+        uses: actions/github-script@v7
+        env:
+          PREV_TAG: ${{ steps.get-prev-tag.outputs.PREV_TAG }}
+        with:
+          script: |
+            if (context.ref === undefined) {
+              return;
+            }
+
+            console.log('PREV_TAG', process.env.PREV_TAG);
+
+            const tagName = context.ref.replace("refs/tags/", "");
+
+            const result = await github.rest.repos.generateReleaseNotes({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              configuration_file_path: '.github/release-config.yml',
+              previous_tag_name: process.env.PREV_TAG,
+            });
+
+            if (result.data === undefined) {
+              console.error(result)
+              throw new Error('No data on body')
+            }
+
+            const title = result.data.name;
+            const body = result.data.body;
+
+            const createReleaseResult = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              name: title,
+              body: body,
+            });
+
+            console.log(createReleaseResult)
