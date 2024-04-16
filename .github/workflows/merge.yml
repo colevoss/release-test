@@ -43,7 +43,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: tagName,
-              configuration_file_path: '.github/release-config.yml'
+              configuration_file_path: '.github/release-config.yml',
+              previous_tag_name: process.env.PREV_TAG,
             });
 
             if (result.data === undefined) {
