@@ -4,18 +4,16 @@ changelog:
       - kotlin-proj
     authors:
       - octocat
+
   categories:
-    - title: Breaking Changes 🛠
+    - title: Major
       labels:
         - Semver-Major
-        - breaking-change
-    - title: Exciting New Features 🎉
+
+    - title: Minor
       labels:
         - Semver-Minor
-        - enhancement
-    - title: Other Changes
+
+    - title: Patch
       labels:
-        - "*"
-      exclude:
-        labels:
-          - ts-proj
+        - Semver-Patch
