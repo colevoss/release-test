@@ -44,7 +44,7 @@ jobs:
           CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
         run: |
           PREV_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep "ts-v$CURRENT_VERSION-rc\." | head -n 1)
-          echo "PREV_TAG=$PREV_TAG" >> "$GITHUB_OUTPUT"
+          echo "PREV_TAG=${PREV_TAG#"refs/tags/"}" >> "$GITHUB_OUTPUT"
 
       - id: tag-current 
         name: Tag Current Commit
