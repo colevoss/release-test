@@ -52,6 +52,7 @@ jobs:
           CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
           NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
           PREV_TAG: ${{ steps.get-prev-tag.outputs.PREV_TAG }}
+
         run: |
           echo "CURRENT_VERSION: $CURRENT_VERSION"
           echo "NEW_TAG:         $NEW_TAG"
