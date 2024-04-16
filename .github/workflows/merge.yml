@@ -5,6 +5,9 @@ on:
     tags:
       - ts-v*
 
+permissions:
+  contents: write
+
 jobs:
   do-thing:
     runs-on: ubuntu-latest
