@@ -22,7 +22,7 @@ jobs:
               return;
             }
 
-            const tagName = context.replace("refs/tags/", "");
+            const tagName = context.ref.replace("refs/tags/", "");
             const result = await github.rest.repos.generateReleaseNotes({
               owner: context.repo.owner,
               repo: context.repo.repo,
