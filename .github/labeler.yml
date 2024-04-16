@@ -1,0 +1,7 @@
+kotlin-proj:
+  - changed-files:
+    - any-glob-to-any-file: kotlin-proj/**
+
+ts-proj:
+  - changed-files:
+    - any-glob-to-any-file: ts-proj/**
