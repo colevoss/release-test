@@ -30,7 +30,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: tagName,
-              configuration_file_path: '.github/release-config.yml'
+              configuration_file_path: '.github/release.yml'
             });
 
             console.log(JSON.stringify(result, null, 2));
