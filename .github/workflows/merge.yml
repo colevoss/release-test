@@ -1,0 +1,21 @@
+name: "Pull Request"
+
+on:
+  push:
+    tags:
+      - ts-v*
+
+jobs:
+  do-thing:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - uses: actions/checkout@v4
+
+      - # Testing Generating Release Notes
+        id: update-status-check
+        name: Update Status Check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log("${{ context.ref }}")
