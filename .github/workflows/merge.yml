@@ -26,6 +26,7 @@ jobs:
             }
 
             const tagName = context.ref.replace("refs/tags/", "");
+
             const result = await github.rest.repos.generateReleaseNotes({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -33,4 +34,20 @@ jobs:
               configuration_file_path: '.github/release-config.yml'
             });
 
-            console.log(JSON.stringify(result.data, null, 2));
+            if (result.data === undefined) {
+              console.error(result)
+              throw new Error('No data on body')
+            }
+
+            const title = result.data.name;
+            const body = result.data.body;
+
+            const createReleaseResult = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              name: title,
+              body: body,
+            });
+
+            console.log(createReleaseResult)
