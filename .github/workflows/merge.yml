@@ -15,18 +15,24 @@ jobs:
       # Checkout
       - uses: actions/checkout@v4
 
-      - name: git version
+      - name: Get last tag
+        id: get-prev-tag
         run: |
-          git -v
+          echo "PREV_TAG=$(git tag --sort=-taggerdate -l 'ts-v*' | head -n 2 | tail -n -1)" >> "$GITHUB_OUTPUT"
+
 
       - # Testing Generating Release Notes
         name: Create Release
         uses: actions/github-script@v7
+        env:
+          PREV_TAG: ${{ steps.get-prev-tag.outputs.PREV_TAG }}
         with:
           script: |
             if (context.ref === undefined) {
               return;
             }
+
+            console.log('PREV_TAG', process.env.PREV_TAG);
 
             const tagName = context.ref.replace("refs/tags/", "");
 
