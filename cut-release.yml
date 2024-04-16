@@ -1,0 +1,22 @@
+name: Cut Release
+
+on:
+  release:
+    types: [updated]
+
+job:
+  get-project:
+    steps:
+      - id: get-project
+        run: |
+          # extract project from release name
+          # set output to project name
+          # set output to version
+          #
+
+  publish-ts:
+    if: ${{ jobs.needs.outputs.proj == 'typscript-sdk'}}
+
+  publish-kt:
+    if: ${{ jobs.needs.outputs.proj == 'kotlin-sdk'}}
+

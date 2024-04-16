@@ -23,6 +23,11 @@ jobs:
           git tag --sort=-creatordate -l 'ts-v*'
           echo "PREV_TAG=$(git tag --sort=-creatordate -l 'ts-v*' | head -n 2 | tail -n -1)" >> "$GITHUB_OUTPUT"
 
+      # - name: Get Release Project
+      #   run: |
+      #     // extract which project the release is for from title
+      #     // ts-0.3.0
+
       - # Testing Generating Release Notes
         name: Create Release
         uses: actions/github-script@v7
@@ -38,6 +43,8 @@ jobs:
 
             const tagName = context.ref.replace("refs/tags/", "");
 
+            // repos.getRelease({})
+
             const result = await github.rest.repos.generateReleaseNotes({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -45,6 +52,10 @@ jobs:
               configuration_file_path: '.github/ts-release-config.yml',
               previous_tag_name: process.env.PREV_TAG,
             });
+
+            // do changelog stuff
+
+            // respos.updateRelease({})
 
             if (result.data === undefined) {
               console.error(result)
