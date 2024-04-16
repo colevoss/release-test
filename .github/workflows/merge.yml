@@ -18,4 +18,12 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log(context.ref_name)
+            const tagName = context.ref_name.replace("refs/tags/", "");
+            const result = await github.rest.repos.generateReleaseNotes({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: tagName,
+              configuration_file_path: '.github/release-config.yml'
+            });
+
+            console.log(JSON.stringify(result, null, 2));
