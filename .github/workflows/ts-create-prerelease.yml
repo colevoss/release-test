@@ -44,7 +44,7 @@ jobs:
           echo "PREV_TAG=${PREV_TAG#"refs/tags/"}" >> "$GITHUB_OUTPUT"
 
       - name: Tag Current Commit
-        id: Tag Current Commit
+        id: tag-current-commit
         env:
           NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
         run: |
