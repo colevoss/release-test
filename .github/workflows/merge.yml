@@ -33,4 +33,4 @@ jobs:
               configuration_file_path: '.github/release-config.yml'
             });
 
-            console.log(JSON.stringify(result.body, null, 2));
+            console.log(JSON.stringify(result.data, null, 2));
