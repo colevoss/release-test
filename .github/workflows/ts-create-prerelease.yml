@@ -43,8 +43,8 @@ jobs:
           PREV_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep "ts-v$CURRENT_VERSION-rc\." | head -n 1)
           echo "PREV_TAG=${PREV_TAG#"refs/tags/"}" >> "$GITHUB_OUTPUT"
 
-      - name: Get last tag
-        id: get-prev-tag
+      - name: Tag Current Commit
+        id: Tag Current Commit
         env:
           NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
         run: |
