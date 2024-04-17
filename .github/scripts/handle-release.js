@@ -8,19 +8,19 @@
  * @property {string=} prevPreRelease
  */
 
-/** @param {import('github-script').AsyncFunctionArguments} AsyncFunctionArguments */
-module.exports = async ({ github, core, context }) => {
+/** @param {import('github-script').AsyncFunctionArguments} ctx */
+module.exports = async (ctx) => {
   /** @type {EnvVars} */
   let envVars;
 
   try {
     envVars = getEnvVariables();
   } catch (e) {
-    core.setFailed(e.message);
+    ctx.core.setFailed(e.message);
     return;
   }
 
-  console.log(envVars);
+  const release = await getPrerelease(ctx, envVars);
 };
 
 /**
@@ -49,4 +49,22 @@ function getEnvVariables() {
     newTag: NEW_TAG,
     prevPreRelease: PREV_TAG,
   };
+}
+
+/**
+ * @param {import('github-script').AsyncFunctionArguments} ctx
+ * @param {EnvVars} vars
+ */
+async function getPrerelease(ctx, vars) {
+  if (true || vars.prevPreRelease) {
+    const release = await ctx.github.rest.repos.getReleaseByTag({
+      owner: ctx.context.repo.owner,
+      repo: ctx.context.repo.repo,
+      tag: vars.prevPreRelease || "some-non-tag",
+    });
+
+    console.log(release);
+
+    return release;
+  }
 }

@@ -58,22 +58,6 @@ jobs:
           # @see https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
           echo "PREV_TAG=${PREV_TAG#"refs/tags/"}" >> "$GITHUB_OUTPUT"
 
-      # -
-      #   id: get-prev-tag
-      #   name: Get last tag
-      #   env:
-      #     CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
-      #   run: |
-      #     # - Lists git tags sorted by tag date descending in a format of `refs/tags/<tagname>`
-      #     # - Filters all tags (via grep) to only return tags like `ts-v0.0.0-rc.1234` where 0.0.0 is the current version
-      #     #   of the libarary/package and 1234 is the release candidate date time.
-      #     # - Uses `head` to grab the first result in the list which is the latest tag of that format
-      #     PREV_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep "ts-v$CURRENT_VERSION-rc\." | head -n 1)
-      #
-      #     # Use Shell parameter expansion to remove the `refs/tags/` portion of the tag ref string
-      #     # @see https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
-      #     echo "PREV_TAG=${PREV_TAG#"refs/tags/"}" >> "$GITHUB_OUTPUT"
-
       -
         id: tag-current-commit
         name: Tag Current Commit
