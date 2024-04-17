@@ -20,7 +20,8 @@ module.exports = async (ctx) => {
     return;
   }
 
-  const release = await getOrCreatePreRelease(ctx, envVars);
+  const changelog = await getChangelog(ctx, envVars);
+  const release = await getPreRelease(ctx, envVars);
 };
 
 /**
@@ -55,7 +56,24 @@ function getEnvVariables() {
  * @param {import('github-script').AsyncFunctionArguments} ctx
  * @param {EnvVars} vars
  */
-async function getOrCreatePreRelease(ctx, vars) {
+async function getChangelog(ctx, vars) {
+  const result = await ctx.github.rest.repos.generateReleaseNotes({
+    owner: ctx.context.repo.owner,
+    repo: ctx.context.repo.repo,
+    tag_name: vars.newTag,
+    configuration_file_path: ".github/ts-release-config.yml",
+  });
+
+  console.log(result.data);
+
+  return result.data;
+}
+
+/**
+ * @param {import('github-script').AsyncFunctionArguments} ctx
+ * @param {EnvVars} vars
+ */
+async function getPreRelease(ctx, vars) {
   if (!vars.prevPreRelease) {
     return null;
   }
@@ -71,6 +89,7 @@ async function getOrCreatePreRelease(ctx, vars) {
 
     return release;
   } catch (e) {
+    // TODO: Improve logging
     ctx.core.info(e.message);
 
     return null;
