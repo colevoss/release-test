@@ -20,7 +20,7 @@ module.exports = async (ctx) => {
     return;
   }
 
-  const name = `TypeScript SDK Prerelease - ${envVars.newTag}`;
+  const name = `TS SDK (Pre) - ${envVars.newTag}`;
 
   const changelog = await getChangelog(ctx, envVars);
   const release = await getPreRelease(ctx, envVars);
