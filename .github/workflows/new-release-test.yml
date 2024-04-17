@@ -18,6 +18,8 @@ jobs:
         id: validate-release
         name: Update Prerelease 
         uses: actions/github-script@v7
+        env:
+          RELEASE_NAME: ${{ github.event.release.name }}
         with:
           script: |
             const re = /^(?<lang>\w*)-sdk-v(?<version>\d+\.\d+\.\d+)$/ 
