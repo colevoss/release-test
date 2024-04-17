@@ -1,4 +1,4 @@
-name: Testing release events
+name: Testing edited release events
 
 on:
   release:
