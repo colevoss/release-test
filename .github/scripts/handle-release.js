@@ -20,6 +20,8 @@ module.exports = async (ctx) => {
     return;
   }
 
+  console.log(ctx.context.repo);
+
   const name = `TS SDK (Pre) - ${envVars.newTag}`;
 
   const changelog = await getChangelog(ctx, envVars);
