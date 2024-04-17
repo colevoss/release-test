@@ -57,14 +57,19 @@ function getEnvVariables() {
  * @param {EnvVars} vars
  */
 async function getChangelog(ctx, vars) {
+  ctx.core.info(
+    `Generating changelog for ${vars.prevReleaseTag}..${vars.newTag}`,
+  );
+
   const result = await ctx.github.rest.repos.generateReleaseNotes({
     owner: ctx.context.repo.owner,
     repo: ctx.context.repo.repo,
     tag_name: vars.newTag,
     configuration_file_path: ".github/ts-release-config.yml",
+    previous_tag_name: vars.prevReleaseTag,
   });
 
-  console.log(result.data);
+  ctx.core.info(result.data.body);
 
   return result.data;
 }
