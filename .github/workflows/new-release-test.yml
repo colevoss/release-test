@@ -39,5 +39,4 @@ jobs:
         id: test-output
         name: Testing JS Output
         run: |
-          echo ${{ steps.validate-release.outputs.lang }}
-          echo ${{ steps.validate-release.outputs.version }}
+          echo ${{ steps.validate-release.outputs }}
