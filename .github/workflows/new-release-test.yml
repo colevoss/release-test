@@ -31,13 +31,14 @@ jobs:
               return;
             }
 
-            console.log('Found match groups', match.groups)
+            console.log('Found match groups', match.groups);
 
-            return match.groups;
+            core.setOutput("lang", match.groups.lang);
+            core.setOutput("version", match.groups.version);
 
       -
         id: test-output
         name: Testing JS Output
         run: |
-          echo "${{ steps.validate-release.outputs.result.lang }}"
-          echo "${{ steps.validate-release.outputs.result.version }}"
+          echo "${{ steps.validate-release.outputs.lang }}"
+          echo "${{ steps.validate-release.outputs.version }}"
