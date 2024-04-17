@@ -20,7 +20,7 @@ module.exports = async (ctx) => {
     return;
   }
 
-  const release = await getPrerelease(ctx, envVars);
+  const release = await getOrCreatePreRelease(ctx, envVars);
 };
 
 /**
@@ -55,8 +55,12 @@ function getEnvVariables() {
  * @param {import('github-script').AsyncFunctionArguments} ctx
  * @param {EnvVars} vars
  */
-async function getPrerelease(ctx, vars) {
-  if (true || vars.prevPreRelease) {
+async function getOrCreatePreRelease(ctx, vars) {
+  if (!vars.prevPreRelease) {
+    return null;
+  }
+
+  try {
     const release = await ctx.github.rest.repos.getReleaseByTag({
       owner: ctx.context.repo.owner,
       repo: ctx.context.repo.repo,
@@ -66,5 +70,9 @@ async function getPrerelease(ctx, vars) {
     console.log(release);
 
     return release;
+  } catch (e) {
+    ctx.core.info(e.message);
+
+    return null;
   }
 }
