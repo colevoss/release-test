@@ -78,11 +78,12 @@ jobs:
           echo "PREV_TAG:        $PREV_TAG"
 
       - uses: actions/github-script@v7
-        with:
+        env:
           CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
           NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
           PREV_TAG: ${{ steps.get-prev-tag.outputs.PREV_TAG }}
 
+        with:
           script: |
             const script = require('./.github/scripts/handle-release.js')
             await script({github, context, core})
