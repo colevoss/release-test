@@ -39,4 +39,4 @@ jobs:
         id: test-output
         name: Testing JS Output
         run: |
-          echo ${{ steps.validate-release.outputs }}
+          echo ${{ toJSON(steps.validate-release.outputs) }}
