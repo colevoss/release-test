@@ -2,17 +2,10 @@ name: Testing release events
 
 on:
   release:
-    types:
-      - published
-      - unpublished
-      - created
-      - edited
-      - deleted
-      - prereleased
-      - released
+    types: [prereleased]
 
 jobs:
-  do-thing:
+  test-release-action:
     runs-on: ubuntu-latest
     steps:
       -
