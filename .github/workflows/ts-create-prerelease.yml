@@ -13,7 +13,8 @@ permissions:
   contents: write
 
 jobs:
-  do-thing:
+  manage-prerelease:
+    name: Manage Prerelease
     runs-on: ubuntu-latest
     steps:
       # Checkout
