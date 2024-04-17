@@ -2,7 +2,7 @@ name: Testing release events
 
 on:
   release:
-    types: [published]
+    types: [released, edited]
 
 jobs:
   test-release-action:
