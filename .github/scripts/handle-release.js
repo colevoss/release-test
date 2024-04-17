@@ -70,6 +70,7 @@ module.exports = async (ctx) => {
 
   ctx.core.summary.addLink(name, releaseUrl);
   ctx.core.summary.addEOL();
+  ctx.core.summary.write();
 };
 
 /**
