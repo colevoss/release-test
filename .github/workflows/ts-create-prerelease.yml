@@ -7,7 +7,7 @@ on:
     paths:
       - 'ts-proj/**'
       - '.github/workflows/ts-create-prerelease.yml'
-      - '.github/workflows/scripts/**'
+      - '.github/workflows/scripts/handle-release.js'
 
 permissions:
   contents: write
