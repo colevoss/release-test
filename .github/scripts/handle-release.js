@@ -37,9 +37,9 @@ module.exports = async (ctx) => {
       prerelease: true,
     });
 
-    ctx.core.info(`Successfully updated release: ${release.data.id}`);
-
-    // update release
+    ctx.core.info(
+      `Successfully updated release: ${updatedReleaseResult.data.id}`,
+    );
   } else {
     ctx.core.info(`Creating prerelease...: ${envVars.newTag}`);
     const createReleaseResult = await ctx.github.rest.repos.createRelease({

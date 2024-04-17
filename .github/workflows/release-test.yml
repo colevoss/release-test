@@ -1,0 +1,22 @@
+name: Testing release events
+
+on:
+  release:
+    types:
+      - published
+      - unpublished
+      - created
+      - edited
+      - deleted
+      - prereleased
+      - released
+
+jobs:
+  do-thing:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        id: log-type
+        name: Log Type
+        run: |
+          echo "Event: ${{ github.event_name }}"
