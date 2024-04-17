@@ -5,8 +5,11 @@ on:
     types: [edited]
 
 jobs:
-  test-release-action:
+  release-type:
     runs-on: ubuntu-latest
+    outputs:
+      language: ${{ steps.validate-release.outputs.lang }}
+      version: ${{ steps.validate-release.outputs.version }}
     steps:
       -
         id: log-type
@@ -31,14 +34,23 @@ jobs:
               return;
             }
 
-            console.log('Found match groups', match.groups);
-
             core.setOutput("lang", match.groups.lang);
             core.setOutput("version", match.groups.version);
 
-      -
-        id: test-output
-        name: Testing JS Output
+  kotlin-publish:
+    runs-on: ubuntu-latest
+    needs: release-type
+    if: needs.release-type.outputs.language == 'kotlin'
+    steps:
+      - id: log-kotlin
         run: |
-          echo "${{ steps.validate-release.outputs.lang }}"
-          echo "${{ steps.validate-release.outputs.version }}"
+          echo "KOTLIN PUBLISH: ${{ needs.release-type.outputs.version }}"
+
+  typescript-publish:
+    runs-on: ubuntu-latest
+    needs: release-type
+    if: needs.release-type.outputs.language == 'typescript'
+    steps:
+      - id: log-typescript
+        run: |
+          echo "TYPESCRIPT PUBLISH: ${{ needs.release-type.outputs.version }}"
