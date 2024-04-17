@@ -13,3 +13,11 @@ jobs:
         name: Log Type
         run: |
           echo "Event: ${{ github.event.action }}"
+
+      -
+        id: update-prerelease
+        name: Update Prerelease 
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log("${{ github.event.release.name }}")
