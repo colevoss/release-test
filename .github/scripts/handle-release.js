@@ -27,6 +27,16 @@ module.exports = async (ctx) => {
 
   if (release !== null) {
     ctx.core.info(`Release Exists: ${release.data.id}`);
+    const updatedReleaseResult = await ctx.github.rest.repos.updateRelease({
+      release_id: release.data.id,
+      owner: ctx.context.repo.owner,
+      repo: ctx.context.repo.repo,
+      tag_name: envVars.newTag,
+      body: changelog.body,
+      name,
+      prerelease: true,
+    });
+
     // update release
   } else {
     const createReleaseResult = await ctx.github.rest.repos.createRelease({
