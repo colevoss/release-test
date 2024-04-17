@@ -2,8 +2,8 @@ name: Testing release events
 
 on:
   release:
-    types: [created, edited]
     # types: [released]
+    types: [deleted]
 
 jobs:
   test-release-action:
