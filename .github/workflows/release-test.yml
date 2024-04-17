@@ -2,7 +2,7 @@ name: Testing release events
 
 on:
   release:
-    types: [released, edited]
+    types: [prereleased, released, edited]
 
 jobs:
   test-release-action:
@@ -12,4 +12,4 @@ jobs:
         id: log-type
         name: Log Type
         run: |
-          echo "Event: ${{ github.event_name }}"
+          echo "Event: ${{ github.event.action }}"
