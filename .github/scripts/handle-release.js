@@ -20,10 +20,13 @@ module.exports = async (ctx) => {
     return;
   }
 
+  const name = `TypeScript SDK - ${envVars.currentVersion} Prerelease`;
+
   const changelog = await getChangelog(ctx, envVars);
   const release = await getPreRelease(ctx, envVars);
 
   if (release !== null) {
+    ctx.core.info(`Release Exists: ${release.data.id}`);
     // update release
   } else {
     const createReleaseResult = await ctx.github.rest.repos.createRelease({
@@ -31,7 +34,8 @@ module.exports = async (ctx) => {
       repo: ctx.context.repo.repo,
       tag_name: envVars.newTag,
       body: changelog.body,
-      name: changelog.name,
+      name,
+      // name: changelog.name,
       prerelease: true,
     });
 
