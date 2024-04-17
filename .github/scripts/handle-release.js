@@ -27,6 +27,9 @@ module.exports = async (ctx) => {
   const changelog = await getChangelog(ctx, envVars);
   const release = await getPreRelease(ctx, envVars);
 
+  /** @type {string} */
+  let releaseUrl;
+
   if (release !== null) {
     ctx.core.info(`Updating Release...: ${release.data.id}`);
     const updatedReleaseResult = await ctx.github.rest.repos.updateRelease({
@@ -38,6 +41,9 @@ module.exports = async (ctx) => {
       name,
       prerelease: true,
     });
+
+    releaseUrl = updatedReleaseResult.data.html_url;
+    ctx.core.summary.addRaw("Successfully updated release ", false);
 
     ctx.core.info(
       `Successfully updated release: ${updatedReleaseResult.data.id}`,
@@ -54,10 +60,16 @@ module.exports = async (ctx) => {
       prerelease: true,
     });
 
+    releaseUrl = createReleaseResult.data.html_url;
+
+    ctx.core.summary.addRaw("Successfully created release ", false);
     ctx.core.info(
       `Created Release ${createReleaseResult.data.id}: ${createReleaseResult.data.name}`,
     );
   }
+
+  ctx.core.summary.addLink(name, releaseUrl);
+  ctx.core.summary.addEOL();
 };
 
 /**
