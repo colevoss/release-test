@@ -104,6 +104,8 @@ async function getPreRelease(ctx, vars) {
     return null;
   }
 
+  ctx.core.debug(`Generating release notes...`);
+
   try {
     const release = await ctx.github.rest.repos.getReleaseByTag({
       owner: ctx.context.repo.owner,
@@ -111,7 +113,7 @@ async function getPreRelease(ctx, vars) {
       tag: vars.prevPreRelease || "some-non-tag",
     });
 
-    console.log(release);
+    ctx.core.info(`Generated release notes`);
 
     return release;
   } catch (e) {

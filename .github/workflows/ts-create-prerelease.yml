@@ -82,7 +82,10 @@ jobs:
           echo "NEW_TAG:         $NEW_TAG"
           echo "PREV_TAG:        $PREV_TAG"
 
-      - uses: actions/github-script@v7
+      -
+        id: update-prerelease
+        name: Update Prerelease 
+        uses: actions/github-script@v7
         env:
           CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
           PREV_RELEASE_TAG: ${{ steps.generate-tag.outputs.PREV_RELEASE_TAG }}
