@@ -40,26 +40,6 @@ jobs:
             const script = require('./.github/scripts/validate-release.js');
             await script({ github, context, core });
 
-      # -
-      #   id: validate-release
-      #   name: Update Prerelease 
-      #   uses: actions/github-script@v7
-      #   env:
-      #     RELEASE_NAME: ${{ github.event.release.name }}
-      #   with:
-      #     script: |
-      #       const re = /^(?<lang>\w*)-sdk-v(?<version>\d+\.\d+\.\d+)$/ 
-      #       const releaseName = process.env.RELEASE_NAME ?? '';
-      #       const match = releaseName.match(re);
-      #
-      #       if (match === null) {
-      #         core.setFailed(`Invalid release name: ${releaseName}`);
-      #         return;
-      #       }
-      #
-      #       core.setOutput("lang", match.groups.lang);
-      #       core.setOutput("version", match.groups.version);
-
   kotlin-publish:
     name: Publish Kotlin Package
     runs-on: ubuntu-latest
@@ -68,7 +48,7 @@ jobs:
     steps:
       - id: log-kotlin
         run: |
-          echo "KOTLIN PUBLISH: ${{ needs.validate-release.outputs.version }}"
+          echo "KOTLIN PUBLISH: ${{ needs.validate-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
 
   typescript-publish:
     name: Publish TypeScript Package
@@ -78,7 +58,7 @@ jobs:
     steps:
       - id: log-typescript
         run: |
-          echo "TYPESCRIPT PUBLISH: ${{ needs.validate-release.outputs.version }}"
+          echo "TYPESCRIPT PUBLISH: ${{ needs.validate-release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
 
   re-tag-release:
     name: Retag Github Release
@@ -91,3 +71,15 @@ jobs:
         name: Log Test
         run: |
           echo "YES I RUN: ${{ needs.validate-release.outputs.version }} ${{ needs.release-type.outputs.version }}"
+
+      -
+        id: validate-release
+        name: Update Prerelease 
+        uses: actions/github-script@v7
+        env:
+          RELEASE_ID: ${{ github.event.release.id }}
+          NEW_TAG: 'retag-test-1'
+        with:
+          script: |
+            const script = require('./.github/scripts/retag-release.js');
+            await script({ github, context, core });
