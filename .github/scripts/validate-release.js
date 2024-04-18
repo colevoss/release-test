@@ -28,15 +28,15 @@ module.exports = async (ctx) => {
     ctx.core.setOutput("lang", match.groups.lang);
     ctx.core.setOutput("version", match.groups.version);
 
-    ctx.core.summary.addRaw(`Language: ${language}`, true);
-    ctx.core.summary.addRaw(`Version: ${version}`, false);
+    // ctx.core.summary.addRaw(`Language: ${language}`, true);
+    // ctx.core.summary.addRaw(`Version: ${version}`, false);
 
     ctx.core.summary.addTable([
       [
         { data: "Language", header: true },
         { data: "Version", header: true },
-        { data: language, header: true },
-        { data: version, header: true },
+        { data: language },
+        { data: version },
       ],
     ]);
 
