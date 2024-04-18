@@ -65,7 +65,10 @@ module.exports = async (ctx) => {
   }
 
   ctx.core.summary.addLink(name, releaseUrl);
-  ctx.core.summary.addDetails("Changelog", changelog.body);
+  ctx.core.summary.addDetails(
+    "Changelog",
+    changelog.body + releaseInstructions,
+  );
   ctx.core.summary.addEOL();
   ctx.core.summary.write();
 };
