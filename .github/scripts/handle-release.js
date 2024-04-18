@@ -169,9 +169,8 @@ const releaseInstructions = `
 ## Release Instructions
 
 <details>
-  <summary>
-  ### *Click here to see instructions for publishing this version!*
-  </summary>
+  <summary>Click here to see instructions for publishing this version!</summary>
+
 1. Edit this release (pencil icon in top left).
 2. Rename the release with the following format \`<language>-sdk-v<desired-release-version>\` where:
   - \`lanuage\` is the language of the package
