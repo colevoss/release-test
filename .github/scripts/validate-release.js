@@ -22,8 +22,15 @@ module.exports = async (ctx) => {
       throw new Error(`No match groups found in release-name ${releaseName}`);
     }
 
+    const language = match.groups.lang;
+    const version = match.groups.version;
+
     ctx.core.setOutput("lang", match.groups.lang);
     ctx.core.setOutput("version", match.groups.version);
+
+    ctx.core.summary.addRaw(`Language: ${language}`);
+    ctx.core.summary.addRaw(`Version:  ${version}`);
+    ctx.core.summary.write();
   } catch (e) {
     ctx.core.setFailed(e.message);
   }
