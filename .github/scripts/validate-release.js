@@ -28,7 +28,7 @@ module.exports = async (ctx) => {
     ctx.core.setOutput("lang", match.groups.lang);
     ctx.core.setOutput("version", match.groups.version);
 
-    ctx.core.summary.addRaw(`Valid release name ${releaseName}`, true);
+    ctx.core.summary.addRaw(`Valid release name: \`${releaseName}\``, true);
 
     ctx.core.summary.addHeading(`Language`, 3);
     ctx.core.summary.addCodeBlock(`${language}`, "text");
