@@ -1,13 +1,15 @@
-name: Testing release events
+name: Publish Release Package
 
 on:
   release:
-    # types: [released]
-    types: [deleted]
+    types: [edited]
 
 jobs:
-  test-release-action:
+  release-type:
     runs-on: ubuntu-latest
+    outputs:
+      language: ${{ steps.validate-release.outputs.lang }}
+      version: ${{ steps.validate-release.outputs.version }}
     steps:
       -
         id: log-type
@@ -16,9 +18,47 @@ jobs:
           echo "Event: ${{ github.event.action }}"
 
       -
-        id: update-prerelease
+        id: validate-release
         name: Update Prerelease 
         uses: actions/github-script@v7
+        env:
+          RELEASE_NAME: ${{ github.event.release.name }}
         with:
           script: |
-            console.log("${{ github.event.release.name }}")
+            const re = /^(?<lang>\w*)-sdk-v(?<version>\d+\.\d+\.\d+)$/ 
+            const releaseName = process.env.RELEASE_NAME ?? '';
+            const match = releaseName.match(re);
+
+            if (match === null) {
+              core.setFailed(`Invalid release name: ${releaseName}`);
+              return;
+            }
+
+            core.setOutput("lang", match.groups.lang);
+            core.setOutput("version", match.groups.version);
+
+  kotlin-publish:
+    runs-on: ubuntu-latest
+    needs: release-type
+    if: needs.release-type.outputs.language == 'kotlin'
+    steps:
+      - id: log-kotlin
+        run: |
+          echo "KOTLIN PUBLISH: ${{ needs.release-type.outputs.version }}"
+
+  typescript-publish:
+    runs-on: ubuntu-latest
+    needs: release-type
+    if: needs.release-type.outputs.language == 'typescript'
+    steps:
+      - id: log-typescript
+        run: |
+          echo "TYPESCRIPT PUBLISH: ${{ needs.release-type.outputs.version }}"
+
+  re-tag-release:
+    runs-on: ubuntu-latest
+    needs: [release-type, kotlin-publish, typescript-publish]
+    steps:
+      - id: log-test
+        run: |
+          echo "YES I RUN: ${{ needs.release-type.outputs.version }} ${{ needs.release-type.outputs.version }}"
