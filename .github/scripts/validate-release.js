@@ -28,17 +28,11 @@ module.exports = async (ctx) => {
     ctx.core.setOutput("lang", match.groups.lang);
     ctx.core.setOutput("version", match.groups.version);
 
-    // ctx.core.summary.addRaw(`Language: ${language}`, true);
-    // ctx.core.summary.addRaw(`Version: ${version}`, false);
-
-    ctx.core.summary.addTable([
-      [
-        { data: "Language", header: true },
-        { data: "Version", header: true },
-        { data: language },
-        { data: version },
-      ],
-    ]);
+    ctx.core.summary.addRaw(`Valid release name ${releaseName}`, true);
+    ctx.core.summary.addHeading(`Language`, 3);
+    ctx.core.summary.addRaw(`${language}`, true);
+    ctx.core.summary.addHeading(`${version}`, 3);
+    ctx.core.summary.addRaw(`${version}`, false);
 
     ctx.core.summary.write();
   } catch (e) {
