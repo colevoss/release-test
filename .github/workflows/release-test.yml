@@ -84,6 +84,8 @@ jobs:
         # This would also have to commit the changes to version files like package.json
         # The tagging would also be done by npm in the typescript version.
         run: |
+          # TODO: This should be updated to correct dir
+          cd ./ts-proj
           npm version $VERSION --git-tag-version=false
 
           # npm publish
