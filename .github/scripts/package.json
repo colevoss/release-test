@@ -1,0 +1,14 @@
+{
+  "name": "release-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/github-script": "github:actions/github-script",
+    "typescript": "^5.4.5"
+  }
+}
