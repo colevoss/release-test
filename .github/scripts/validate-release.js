@@ -29,10 +29,12 @@ module.exports = async (ctx) => {
     ctx.core.setOutput("version", match.groups.version);
 
     ctx.core.summary.addRaw(`Valid release name ${releaseName}`, true);
+
     ctx.core.summary.addHeading(`Language`, 3);
-    ctx.core.summary.addRaw(`${language}`, true);
-    ctx.core.summary.addHeading(`${version}`, 3);
-    ctx.core.summary.addRaw(`${version}`, false);
+    ctx.core.summary.addCodeBlock(`${language}`, "text");
+
+    ctx.core.summary.addHeading(`Version`, 3);
+    ctx.core.summary.addCodeBlock(`${version}`, "text");
 
     ctx.core.summary.write();
   } catch (e) {
