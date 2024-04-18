@@ -111,6 +111,7 @@ async function getChangelog(ctx, vars) {
     owner: ctx.context.repo.owner,
     repo: ctx.context.repo.repo,
     tag_name: vars.newTag,
+    // TODO: Update this to use the correct lang release config
     configuration_file_path: ".github/ts-release-config.yml",
     previous_tag_name: vars.prevReleaseTag,
   });

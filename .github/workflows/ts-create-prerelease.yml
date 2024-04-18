@@ -39,7 +39,8 @@ jobs:
 
           # Previous full release tag
           # TODO: might need to get this similar to how we get PREV_TAG
-          PREV_RELEASE_TAG="typescript-sdk-v$CURRENT_VERSION"
+          # PREV_RELEASE_TAG="typescript-sdk-v$CURRENT_VERSION"
+          PREV_RELEASE_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep -E 'typescript-sdk-v.*' | grep -v 'rc' | head -n 1)
 
           # Previous pre-release tag
           NEW_TAG=typescript-sdk-v$CURRENT_VERSION-rc.$(git show --no-patch --format=%ct)
