@@ -170,20 +170,19 @@ const releaseInstructions = `
 
 <details>
   <summary>
-  ***Click here to see instructions for publishing this version!***
+  ### *Click here to see instructions for publishing this version!*
   </summary>
-
-  1. Edit this release (pencil icon in top left).
-  2. Rename the release with the following format \`<language>-sdk-v<desired-release-version>\` where:
-    - \`lanuage\` is the language of the package
-      - \`typescript\`
-      - \`kotlin\`
-    - desired-release-version is the version to publish
-      - This should be determined by reading the changelog of this release
-    - Example:
-      - \`typescript-sdk-v1.2.3\`
-      - \`kotlin-sdk-v3.2.1\`
-  3. Uncheck the \`Set as pre-release\` checkmark under the description text area
-  4. Update Release
+1. Edit this release (pencil icon in top left).
+2. Rename the release with the following format \`<language>-sdk-v<desired-release-version>\` where:
+  - \`lanuage\` is the language of the package
+    - \`typescript\`
+    - \`kotlin\`
+  - \`desired-release-version\` is the version to publish
+    - This should be determined by reading the changelog of this release
+  - Example:
+    - \`typescript-sdk-v1.2.3\`
+    - \`kotlin-sdk-v3.2.1\`
+3. Uncheck the \`Set as pre-release\` checkmark under the description text area
+4. Update Release
 </details>
 `;
