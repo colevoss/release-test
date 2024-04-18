@@ -20,22 +20,29 @@ jobs:
       -
         id: validate-release
         name: Update Prerelease 
-        uses: actions/github-script@v7
-        env:
-          RELEASE_NAME: ${{ github.event.release.name }}
+        uses: ./.github/actions/validate-release
         with:
-          script: |
-            const re = /^(?<lang>\w*)-sdk-v(?<version>\d+\.\d+\.\d+)$/ 
-            const releaseName = process.env.RELEASE_NAME ?? '';
-            const match = releaseName.match(re);
+          release-name: ${{ github.event.release.name }}
 
-            if (match === null) {
-              core.setFailed(`Invalid release name: ${releaseName}`);
-              return;
-            }
-
-            core.setOutput("lang", match.groups.lang);
-            core.setOutput("version", match.groups.version);
+      # -
+      #   id: validate-release
+      #   name: Update Prerelease 
+      #   uses: actions/github-script@v7
+      #   env:
+      #     RELEASE_NAME: ${{ github.event.release.name }}
+      #   with:
+      #     script: |
+      #       const re = /^(?<lang>\w*)-sdk-v(?<version>\d+\.\d+\.\d+)$/ 
+      #       const releaseName = process.env.RELEASE_NAME ?? '';
+      #       const match = releaseName.match(re);
+      #
+      #       if (match === null) {
+      #         core.setFailed(`Invalid release name: ${releaseName}`);
+      #         return;
+      #       }
+      #
+      #       core.setOutput("lang", match.groups.lang);
+      #       core.setOutput("version", match.groups.version);
 
   kotlin-publish:
     runs-on: ubuntu-latest
@@ -60,6 +67,8 @@ jobs:
     if: ${{ always() }}
     needs: [release-type, kotlin-publish, typescript-publish]
     steps:
-      - id: log-test
+      -
+        id: log-test
+        name: Log Test
         run: |
           echo "YES I RUN: ${{ needs.release-type.outputs.version }} ${{ needs.release-type.outputs.version }}"
