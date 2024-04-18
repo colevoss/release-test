@@ -57,6 +57,7 @@ jobs:
 
   re-tag-release:
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     needs: [release-type, kotlin-publish, typescript-publish]
     steps:
       - id: log-test
