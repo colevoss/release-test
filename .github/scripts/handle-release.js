@@ -50,7 +50,7 @@ module.exports = async (ctx) => {
       owner: ctx.context.repo.owner,
       repo: ctx.context.repo.repo,
       tag_name: envVars.newTag,
-      body: changelog.body,
+      body: changelog.body + releaseInstructions,
       name,
       // name: changelog.name,
       prerelease: true,
