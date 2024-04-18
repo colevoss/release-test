@@ -95,12 +95,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       -
-        id: log-test
-        name: Log Test
+        id: previous-release-tag
+        name: Generate Tag
         run: |
-          echo "YES I RUN: ${{ needs.validate-release.outputs.version }} ${{ needs.release-type.outputs.version }}"
+          PREV_RELEASE_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep -E 'typescript-sdk-v.*' | grep -v 'rc' | head -n 2 | tail -n 1)
+          echo "PREV_RELEASE_TAG=$PREV_RELEASE_TAG" >> "$GITHUB_OUTPUT"
 
       -
         id: validate-release
@@ -109,6 +109,7 @@ jobs:
         env:
           RELEASE_ID: ${{ github.event.release.id }}
           NEW_TAG: ${{ github.event.release.name }}
+          PREV_RELEASE_TAG: ${{ steps.previous-release-tag.outputs.PREV_RELEASE_TAG }}
         with:
           script: |
             const script = require('./.github/scripts/retag-release.js');
