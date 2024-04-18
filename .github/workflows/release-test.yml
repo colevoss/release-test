@@ -22,12 +22,22 @@ jobs:
         run: |
           echo "Event: ${{ github.event.action }}"
 
+      # -
+      #   id: validate-release
+      #   name: Update Prerelease 
+      #   uses: ./.github/actions/validate-release
+      #   with:
+      #     release-name: ${{ github.event.release.name }}
       -
         id: validate-release
         name: Update Prerelease 
-        uses: ./.github/actions/validate-release
+        uses: actions/github-script@v7
+        env:
+          RELEASE_NAME: ${{ github.event.release.name }}
         with:
-          release-name: ${{ github.event.release.name }}
+          script: |
+            const script = require('./.github/scripts/validate-release.js');
+            await script({ github, context, core });
 
       # -
       #   id: validate-release
