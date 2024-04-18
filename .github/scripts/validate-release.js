@@ -28,9 +28,8 @@ module.exports = async (ctx) => {
     ctx.core.setOutput("lang", match.groups.lang);
     ctx.core.setOutput("version", match.groups.version);
 
-    ctx.core.summary.addRaw(`Language: ${language}`);
-    ctx.core.summary.addEOL();
-    ctx.core.summary.addRaw(`Version: ${version}`);
+    ctx.core.summary.addRaw(`Language: ${language}`, true);
+    ctx.core.summary.addRaw(`Version: ${version}`, false);
     ctx.core.summary.write();
   } catch (e) {
     ctx.core.setFailed(e.message);
