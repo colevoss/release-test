@@ -90,7 +90,7 @@ jobs:
           PREV_RELEASE_TAG: ${{ steps.generate-tag.outputs.PREV_RELEASE_TAG }}
           NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
           PREV_TAG: ${{ steps.generate-tag.outputs.PREV_TAG }}
-          RELEASE_CONFIG: '.github/-release-config.yml'
+          RELEASE_CONFIG: '.github/typescript-release-config.yml'
 
         with:
           script: |
