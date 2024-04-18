@@ -30,6 +30,16 @@ module.exports = async (ctx) => {
 
     ctx.core.summary.addRaw(`Language: ${language}`, true);
     ctx.core.summary.addRaw(`Version: ${version}`, false);
+
+    ctx.core.summary.addTable([
+      [
+        { data: "Language", header: true },
+        { data: "Version", header: true },
+        { data: language, header: true },
+        { data: version, header: true },
+      ],
+    ]);
+
     ctx.core.summary.write();
   } catch (e) {
     ctx.core.setFailed(e.message);
