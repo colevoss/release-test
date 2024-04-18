@@ -1,5 +1,5 @@
 # Kotlin Proj
 
-I am the kotlin project
+DEMO 1.0.0
 
-KT DEMO
+Will be 1.0.1
