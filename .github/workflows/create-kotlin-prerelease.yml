@@ -1,0 +1,98 @@
+name: Create TS Prerelease
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'kotlin-proj/**'
+      - '.github/workflows/create-kotlin-prerelease.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  manage-prerelease:
+    name: Manage Prerelease
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      -
+        id: configure-git
+        name: Configure git
+        run: |
+          git config user.name "Cole Voss"
+          git config user.email "voss.cole@gmail.com"
+          # git config user.name "bwell-dev"
+          # git config user.email "bwell-dev@icanbwell.com"
+
+      -
+        id: generate-tag
+        name: Generate Tag
+        run: |
+          # Get current version from package.json (or gradle thing)
+          CURRENT_VERSION=$(cat ./kotlin-proj/package.json | jq -r .version)
+
+          # Previous full release tag
+          # TODO: might need to get this similar to how we get PREV_TAG
+          # PREV_RELEASE_TAG="kotlin-sdk-v$CURRENT_VERSION"
+          PREV_RELEASE_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep -E 'kotlin-sdk-v.*' | grep -v 'rc' | head -n 1)
+
+          # Previous pre-release tag
+          NEW_TAG=kotlin-sdk-v$CURRENT_VERSION-rc.$(git show --no-patch --format=%ct)
+          
+          # - Lists git tags sorted by tag date descending in a format of `refs/tags/<tagname>`
+          # - Filters all tags (via grep) to only return tags like `kotlin-sdk-v0.0.0-rc.1234` where 0.0.0 is the current version
+          #   of the libarary/package and 1234 is the release candidate date time.
+          # - Uses `head` to grab the first result in the list which is the latest tag of that format
+          PREV_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep "kotlin-sdk-v$CURRENT_VERSION-rc\." | head -n 1)
+
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "PREV_RELEASE_TAG=$PREV_RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "NEW_TAG=$NEW_TAG" >> "$GITHUB_OUTPUT"
+
+          # Use Shell parameter expansion to remove the `refs/tags/` portion of the tag ref string
+          # @see https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+          echo "PREV_TAG=${PREV_TAG#"refs/tags/"}" >> "$GITHUB_OUTPUT"
+      -
+        id: test-commit-tags
+        name: Log Tags
+        env:
+          CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
+          PREV_RELEASE_TAG: ${{ steps.generate-tag.outputs.PREV_RELEASE_TAG }}
+          NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
+          PREV_TAG: ${{ steps.generate-tag.outputs.PREV_TAG }}
+
+        run: |
+          echo "PREV_RELEASE_TAG: $PREV_RELEASE_TAG"
+          echo "CURRENT_VERSION:  $CURRENT_VERSION"
+          echo "NEW_TAG:          $NEW_TAG"
+          echo "PREV_TAG:         $PREV_TAG"
+      -
+        id: tag-current-commit
+        name: Tag Current Commit
+        env:
+          NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
+        run: |
+          git tag -a $NEW_TAG -m "$NEW_TAG RC"
+          git push origin --tags
+
+      -
+        id: update-prerelease
+        name: Update Prerelease 
+        uses: actions/github-script@v7
+        env:
+          CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
+          PREV_RELEASE_TAG: ${{ steps.generate-tag.outputs.PREV_RELEASE_TAG }}
+          NEW_TAG: ${{ steps.generate-tag.outputs.NEW_TAG }}
+          PREV_TAG: ${{ steps.generate-tag.outputs.PREV_TAG }}
+          RELEASE_CONFIG: '.github/kotlin-release-config.yml'
+
+        with:
+          script: |
+            const script = require('./.github/scripts/handle-release.js');
+            await script({ github, context, core });
