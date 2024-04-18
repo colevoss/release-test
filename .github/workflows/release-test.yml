@@ -2,7 +2,8 @@ name: Publish Release Package
 
 on:
   release:
-    types: [edited]
+    types: [released]
+    # types: [edited]
 
 permissions:
   contents: write
@@ -81,6 +82,8 @@ jobs:
         run: |
           git tag -a $NEW_TAG -m "$NEW_TAG Publish Release"
           git push origin --tags
+
+          echo "New Tag Created for TypeScript Release: $NEW_TAG" >> $GITHUB_STEP_SUMMARY
 
   re-tag-release:
     name: Retag Github Release
