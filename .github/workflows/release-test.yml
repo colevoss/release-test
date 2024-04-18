@@ -4,6 +4,9 @@ on:
   release:
     types: [edited]
 
+permissions:
+  contents: write
+
 jobs:
   validate-release:
     name: Validate Release
