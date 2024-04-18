@@ -52,7 +52,8 @@ jobs:
           PREV_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep "typescript-sdk-v$CURRENT_VERSION-rc\." | head -n 1)
 
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
-          echo "PREV_RELEASE_TAG=$PREV_RELEASE_TAG" >> "$GITHUB_OUTPUT" echo "NEW_TAG=$NEW_TAG" >> "$GITHUB_OUTPUT"
+          echo "PREV_RELEASE_TAG=$PREV_RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "NEW_TAG=$NEW_TAG" >> "$GITHUB_OUTPUT"
 
           # Use Shell parameter expansion to remove the `refs/tags/` portion of the tag ref string
           # @see https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
