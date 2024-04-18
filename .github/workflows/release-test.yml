@@ -113,8 +113,10 @@ jobs:
       -
         id: previous-release-tag
         name: Generate Tag
+        env:
+          LANGUAGE: ${{ needs.validate-release.outputs.language }}
         run: |
-          PREV_RELEASE_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep -E 'typescript-sdk-v.*' | grep -v 'rc' | head -n 2 | tail -n 1)
+          PREV_RELEASE_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep -E "$LANGUAGE-sdk-v.*" | grep -v 'rc' | head -n 2 | tail -n 1)
           echo "PREV_RELEASE_TAG=$PREV_RELEASE_TAG" >> "$GITHUB_OUTPUT"
 
       -
@@ -125,6 +127,7 @@ jobs:
           RELEASE_ID: ${{ github.event.release.id }}
           NEW_TAG: ${{ github.event.release.name }}
           PREV_RELEASE_TAG: ${{ steps.previous-release-tag.outputs.PREV_RELEASE_TAG }}
+          RELEASE_CONFIG: .github/${{ needs.validate-release.outputs.language }}-release-config.yml
         with:
           script: |
             const script = require('./.github/scripts/retag-release.js');

@@ -107,12 +107,14 @@ async function getChangelog(ctx, vars) {
     `Generating changelog for ${vars.prevReleaseTag}..${vars.newTag}`,
   );
 
+  const releaseConfig = getReleaseConfigFile();
+
   const result = await ctx.github.rest.repos.generateReleaseNotes({
     owner: ctx.context.repo.owner,
     repo: ctx.context.repo.repo,
     tag_name: vars.newTag,
     // TODO: Update this to use the correct lang release config
-    configuration_file_path: ".github/ts-release-config.yml",
+    configuration_file_path: releaseConfig,
     previous_tag_name: vars.prevReleaseTag,
   });
 
@@ -148,4 +150,13 @@ async function getPreRelease(ctx, vars) {
 
     return null;
   }
+}
+
+/**
+ * @returns {string}
+ */
+function getReleaseConfigFile() {
+  const config = process.env.RELEASE_CONFIG;
+
+  return config ?? "";
 }

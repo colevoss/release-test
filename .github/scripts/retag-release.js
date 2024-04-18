@@ -7,12 +7,14 @@ module.exports = async (ctx) => {
     const releaseId = getReleaseId();
     const previousReleaseTag = getPreviousReleaseTag();
 
+    const releaseConfig = getReleaseConfigFile();
+
     const changelogResult = await ctx.github.rest.repos.generateReleaseNotes({
       owner: ctx.context.repo.owner,
       repo: ctx.context.repo.repo,
       tag_name: tag,
       // TODO: Update this to use the correct lang release config
-      configuration_file_path: ".github/ts-release-config.yml",
+      configuration_file_path: releaseConfig,
       previous_tag_name: previousReleaseTag,
     });
 
@@ -79,4 +81,13 @@ function getPreviousReleaseTag() {
   }
 
   return previousReleaseTag;
+}
+
+/**
+ * @returns {string}
+ */
+function getReleaseConfigFile() {
+  const config = process.env.RELEASE_CONFIG;
+
+  return config ?? "";
 }
