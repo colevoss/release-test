@@ -1,6 +1,6 @@
 {
   "name": "release-test",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "1. Create/Update {proj}-prerelease Github release on merge to main per project -- Re-use changelog generation from current tag workflow -- use ['prereleased', 'edited'] -- Check that release is still pre-release and not ready for release",
   "main": "index.js",
   "scripts": {
