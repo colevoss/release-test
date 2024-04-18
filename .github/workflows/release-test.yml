@@ -11,6 +11,11 @@ jobs:
       language: ${{ steps.validate-release.outputs.lang }}
       version: ${{ steps.validate-release.outputs.version }}
     steps:
+      # Checkout
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       -
         id: log-type
         name: Log Type
