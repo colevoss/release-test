@@ -5,7 +5,8 @@ on:
     types: [edited]
 
 jobs:
-  release-type:
+  validate-release:
+    name: Validate Release
     runs-on: ubuntu-latest
     outputs:
       language: ${{ steps.validate-release.outputs.lang }}
@@ -60,30 +61,33 @@ jobs:
       #       core.setOutput("version", match.groups.version);
 
   kotlin-publish:
+    name: Publish Kotlin Package
     runs-on: ubuntu-latest
-    needs: release-type
-    if: needs.release-type.outputs.language == 'kotlin'
+    needs: validate-release
+    if: needs.validate-release.outputs.language == 'kotlin'
     steps:
       - id: log-kotlin
         run: |
-          echo "KOTLIN PUBLISH: ${{ needs.release-type.outputs.version }}"
+          echo "KOTLIN PUBLISH: ${{ needs.validate-release.outputs.version }}"
 
   typescript-publish:
+    name: Publish TypeScript Package
     runs-on: ubuntu-latest
-    needs: release-type
-    if: needs.release-type.outputs.language == 'typescript'
+    needs: validate-release
+    if: needs.validate-release.outputs.language == 'typescript'
     steps:
       - id: log-typescript
         run: |
-          echo "TYPESCRIPT PUBLISH: ${{ needs.release-type.outputs.version }}"
+          echo "TYPESCRIPT PUBLISH: ${{ needs.validate-release.outputs.version }}"
 
   re-tag-release:
+    name: Retag Github Release
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: [release-type, kotlin-publish, typescript-publish]
+    needs: [validate-release, kotlin-publish, typescript-publish]
     steps:
       -
         id: log-test
         name: Log Test
         run: |
-          echo "YES I RUN: ${{ needs.release-type.outputs.version }} ${{ needs.release-type.outputs.version }}"
+          echo "YES I RUN: ${{ needs.validate-release.outputs.version }} ${{ needs.release-type.outputs.version }}"
