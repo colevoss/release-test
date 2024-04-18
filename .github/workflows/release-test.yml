@@ -93,8 +93,7 @@ jobs:
           git commit -m "[no ci] Release $VERSION" --no-verify
 
           git tag -a $NEW_TAG -m "$NEW_TAG Publish Release"
-          git push --follow-tags
-          # git push origin $NEW_TAG
+          git push origin main --follow-tags
 
           echo "New Tag Created for TypeScript Release: $NEW_TAG" >> $GITHUB_STEP_SUMMARY
 
