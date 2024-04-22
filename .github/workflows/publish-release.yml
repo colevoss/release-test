@@ -1,9 +1,13 @@
 name: Publish Release Package
 
 on:
+  # @see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
   release:
     types: [released]
-    # types: [edited]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -55,14 +59,15 @@ jobs:
         id: configure-git
         name: Configure git
         run: |
+          # TODO: USE BWELL USER
+          # git config user.name "bwell-dev"
+          # git config user.email "bwell-dev@icanbwell.com"
           git config user.name "Cole Voss"
           git config user.email "voss.cole@gmail.com"
 
-          # git checkout ${{ github.event.release.tag_name }}
+          # Need to checkout main since actions/checkout starts at detached HEAD
           git checkout main
 
-          # git config user.name "bwell-dev"
-          # git config user.email "bwell-dev@icanbwell.com"
       -
         id: tag-current-commit
         name: Tag Current Commit
@@ -107,32 +112,37 @@ jobs:
         id: configure-git
         name: Configure git
         run: |
+          # TODO: USE BWELL USER
+          # git config user.name "bwell-dev"
+          # git config user.email "bwell-dev@icanbwell.com"
           git config user.name "Cole Voss"
           git config user.email "voss.cole@gmail.com"
 
-          # git checkout ${{ github.event.release.tag_name }}
+          # Need to checkout main since actions/checkout starts at detached HEAD
           git checkout main
 
-          # git config user.name "bwell-dev"
-          # git config user.email "bwell-dev@icanbwell.com"
       -
         id: tag-current-commit
         name: Tag Current Commit
         env:
           NEW_TAG: ${{ github.event.release.name }}
           VERSION: ${{ needs.validate-release.outputs.version }}
-        # TODO:
-        # The tagging would also be done by npm in the typescript version.
         run: |
           # TODO: This should be updated to correct dir
           cd ./ts-proj
           npm version $VERSION --git-tag-version=false
 
-          # npm publish
+          # TODO: On publish make sure to use --tag <not latest>
+          # @see https://docs.npmjs.com/cli/v9/commands/npm-dist-tag
+          # What do we want the tag to be?
+          # npm publish --tag=next
 
+          # Logs changed files in the following format to confirm the changes were made
+          # ?? path/to/changed/file.json
           git status --porcelain
 
           git add -A
+
           # I believe this won't trigger a workflow run since its ran in a workflow
           # but its probably best to add [no ci] anyway
           git commit -m "[no ci] Typescript SDK Release $VERSION" --no-verify
@@ -158,6 +168,9 @@ jobs:
         env:
           LANGUAGE: ${{ needs.validate-release.outputs.language }}
         run: |
+          # Get the most recent non-rc release for the the published package
+          # This is used for generating the changelog from the previous version
+          # to the newly published version
           PREV_RELEASE_TAG=$(git for-each-ref refs/tags --sort=-taggerdate --format='%(refname)' | grep -E "$LANGUAGE-sdk-v.*" | grep -v 'rc' | head -n 2 | tail -n 1)
           echo "PREV_RELEASE_TAG=$PREV_RELEASE_TAG" >> "$GITHUB_OUTPUT"
 
