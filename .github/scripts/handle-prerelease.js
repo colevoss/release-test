@@ -1,14 +1,12 @@
 // @ts-check
 
 /**
- * @typedef {Object} EnvVars - Environment varibles that should be set for this script
- * @property {string} prevReleaseTag
- * @property {string} currentVersion
- * @property {string} newTag
- * @property {string=} prevPreRelease
+ * This script is repsonsible for generating a changelog for a pre-release version
+ * and creating or updating the previous Github release with the new pre-release
+ * version.
+ *
+ * @param {import('github-script').AsyncFunctionArguments} ctx
  */
-
-/** @param {import('github-script').AsyncFunctionArguments} ctx */
 module.exports = async (ctx) => {
   /** @type {EnvVars} */
   let envVars;
@@ -30,6 +28,7 @@ module.exports = async (ctx) => {
 
   if (release !== null) {
     ctx.core.info(`Updating Release...: ${release.data.id}`);
+
     const updatedReleaseResult = await ctx.github.rest.repos.updateRelease({
       release_id: release.data.id,
       owner: ctx.context.repo.owner,
@@ -46,13 +45,13 @@ module.exports = async (ctx) => {
     ctx.core.info(`Updated Release: ${updatedReleaseResult.data.id}`);
   } else {
     ctx.core.info(`Creating prerelease...: ${envVars.newTag}`);
+
     const createReleaseResult = await ctx.github.rest.repos.createRelease({
       owner: ctx.context.repo.owner,
       repo: ctx.context.repo.repo,
       tag_name: envVars.newTag,
       body: changelog.body + releaseInstructions,
       name,
-      // name: changelog.name,
       prerelease: true,
     });
 
@@ -72,6 +71,14 @@ module.exports = async (ctx) => {
   ctx.core.summary.addEOL();
   ctx.core.summary.write();
 };
+
+/**
+ * @typedef {Object} EnvVars - Environment varibles that should be set for this script
+ * @property {string} prevReleaseTag
+ * @property {string} currentVersion
+ * @property {string} newTag
+ * @property {string=} prevPreRelease
+ */
 
 /**
  * Gets variables from environment and validates required variables are present
@@ -102,8 +109,12 @@ function getEnvVariables() {
 }
 
 /**
+ * Generate a changelog for the new/updated pre-release
+ *
  * @param {import('github-script').AsyncFunctionArguments} ctx
  * @param {EnvVars} vars
+ *
+ * @see https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#generate-release-notes-content-for-a-release
  */
 async function getChangelog(ctx, vars) {
   ctx.core.info(
@@ -116,9 +127,8 @@ async function getChangelog(ctx, vars) {
     owner: ctx.context.repo.owner,
     repo: ctx.context.repo.repo,
     tag_name: vars.newTag,
-    // TODO: Update this to use the correct lang release config
     configuration_file_path: releaseConfig,
-    previous_tag_name: vars.prevReleaseTag,
+    previous_tag_name: vars.prevReleaseTag ?? undefined,
   });
 
   ctx.core.info(result.data.body);

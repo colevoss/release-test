@@ -5,8 +5,9 @@ on:
     branches:
       - main
     paths:
+      # TODO: Update this to correct directory
       - 'ts-proj/**'
-      - '.github/workflows/ts-create-prerelease.yml'
+      - '.github/workflows/create-typescript-prerelease.yml'
 
 permissions:
   contents: write
@@ -25,6 +26,7 @@ jobs:
         id: configure-git
         name: Configure git
         run: |
+          # TODO: Update bwell user
           git config user.name "Cole Voss"
           git config user.email "voss.cole@gmail.com"
           # git config user.name "bwell-dev"
@@ -34,6 +36,7 @@ jobs:
         id: generate-tag
         name: Generate Tag
         run: |
+          # TODO: Update this to correct directory
           # Get current version from package.json (or gradle thing)
           CURRENT_VERSION=$(cat ./ts-proj/package.json | jq -r .version)
 
@@ -59,7 +62,7 @@ jobs:
           # @see https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
           echo "PREV_TAG=${PREV_TAG#"refs/tags/"}" >> "$GITHUB_OUTPUT"
       -
-        id: test-commit-tags
+        id: log-commit-tags
         name: Log Tags
         env:
           CURRENT_VERSION: ${{ steps.generate-tag.outputs.CURRENT_VERSION }}
@@ -94,5 +97,5 @@ jobs:
 
         with:
           script: |
-            const script = require('./.github/scripts/handle-release.js');
+            const script = require('./.github/scripts/handle-prerelease.js');
             await script({ github, context, core });

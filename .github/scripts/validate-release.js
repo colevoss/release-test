@@ -1,6 +1,18 @@
 // @ts-check
 
-/** @param {import('github-script').AsyncFunctionArguments} ctx */
+/**
+ * Validate the new release name
+ *
+ * Name should follow this pattern:
+ *
+ * <language>-sdk-v<version>
+ *
+ * @example
+ * typescript-sdk-v0.1.2
+ * kotlin-sdk-v10.20.30
+ *
+ * @param {import('github-script').AsyncFunctionArguments} ctx
+ */
 module.exports = async (ctx) => {
   try {
     const releaseName = process.env.RELEASE_NAME ?? "";

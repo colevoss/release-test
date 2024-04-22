@@ -1,6 +1,12 @@
 // @ts-check
 
-/** @param {import('github-script').AsyncFunctionArguments} ctx */
+/**
+ * Retag the Github release with the published version's tag. The Github release
+ * will be tagged with an rc tag but we want to update the release with the tag
+ * created when the package was published
+ *
+ * @param {import('github-script').AsyncFunctionArguments} ctx
+ */
 module.exports = async (ctx) => {
   try {
     const tag = getNewTag();
@@ -13,7 +19,6 @@ module.exports = async (ctx) => {
       owner: ctx.context.repo.owner,
       repo: ctx.context.repo.repo,
       tag_name: tag,
-      // TODO: Update this to use the correct lang release config
       configuration_file_path: releaseConfig,
       previous_tag_name: previousReleaseTag,
     });
